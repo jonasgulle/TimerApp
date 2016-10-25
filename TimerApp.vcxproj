@@ -207,6 +207,7 @@
     <ResourceCompile Include="TimerApp.rc" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="README.md" />
     <None Include="res\TimerApp.rc2" />
   </ItemGroup>
   <ItemGroup>

@@ -186,6 +186,5 @@ void CAboutDlg::OnNMClickGithubLink(NMHDR *pNMHDR, LRESULT *pResult)
 	url.Replace(TEXT("<a>"), TEXT(""));
 	url.Replace(TEXT("</a>"), TEXT(""));
 	::ShellExecute(NULL, NULL, url, NULL, NULL, SW_SHOWNORMAL);
-
 	*pResult = 0;
 }

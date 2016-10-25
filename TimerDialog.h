@@ -22,7 +22,20 @@ protected:
 
 	DECLARE_MESSAGE_MAP()
 public:
-	int m_CountDown;
+	int m_TimerValue;
 	CComboBox m_TimeUnit;
 	virtual BOOL OnInitDialog();
+	afx_msg void OnBnClickedSelectFont();
+	void UpdateFont(LOGFONT * font);
+	CString m_CurrentFont;
+	LOGFONT m_TimerFont;
+	COLORREF m_FontColor;
+private:
+	void UpdateFont(CFont &font);
+	void UpdateColor(COLORREF color);
+public:
+	afx_msg void OnBnClickedSelectColor();
+	afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);
+	CComboBox m_CountType;
+	afx_msg void OnCbnSelchangeCountType();
 };

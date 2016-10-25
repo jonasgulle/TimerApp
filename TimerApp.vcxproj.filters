@@ -60,6 +60,7 @@
     <None Include="res\TimerApp.rc2">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\TimerApp.ico">

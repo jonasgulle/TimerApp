@@ -1,2 +1,2 @@
 # TimerApp
-A timer application for my son for his Youtube gaming sessions.
+A timer application for my sons Youtube gaming sessions.
