@@ -1,6 +1,6 @@
 #pragma once
 #include "afxwin.h"
-
+#include "TimerProps.h"
 
 // TimerDialog dialog
 
@@ -27,15 +27,24 @@ public:
 	virtual BOOL OnInitDialog();
 	afx_msg void OnBnClickedSelectFont();
 	void UpdateFont(LOGFONT * font);
-	CString m_CurrentFont;
-	LOGFONT m_TimerFont;
-	COLORREF m_FontColor;
+	CTimerProps GetTimer() const { return m_Timer; }
+
 private:
 	void UpdateFont(CFont &font);
 	void UpdateColor(COLORREF color);
+
+private:
+	CTimerProps m_Timer;
+	CString m_CurrentFont;
+	LOGFONT m_TimerFont;
+	COLORREF m_FontColor;
+
 public:
 	afx_msg void OnBnClickedSelectColor();
 	afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);
 	CComboBox m_CountType;
 	afx_msg void OnCbnSelchangeCountType();
+	virtual void OnOK();
+	CString m_TimerName;
+	afx_msg void OnEnChangeTimerName();
 };

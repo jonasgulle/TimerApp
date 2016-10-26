@@ -185,14 +185,18 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="DesktopTimer.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="TimerApp.h" />
     <ClInclude Include="TimerAppDlg.h" />
     <ClInclude Include="TimerDialog.h" />
+    <ClInclude Include="TimerProps.h" />
+    <ClInclude Include="TimerStore.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="DesktopTimer.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -202,6 +206,8 @@
     <ClCompile Include="TimerApp.cpp" />
     <ClCompile Include="TimerAppDlg.cpp" />
     <ClCompile Include="TimerDialog.cpp" />
+    <ClCompile Include="TimerProps.cpp" />
+    <ClCompile Include="TimerStore.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="TimerApp.rc" />

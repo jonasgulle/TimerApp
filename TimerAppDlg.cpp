@@ -71,6 +71,7 @@ BEGIN_MESSAGE_MAP(CTimerAppDlg, CDialog)
 	ON_WM_QUERYDRAGICON()
 	ON_BN_CLICKED(IDOK, &CTimerAppDlg::OnBnClickedOk)
 	ON_BN_CLICKED(IDC_NEW_TIMER, &CTimerAppDlg::OnBnClickedNewTimer)
+	ON_LBN_DBLCLK(IDC_TIMER_LIST, &CTimerAppDlg::OnLbnDblclkTimerList)
 END_MESSAGE_MAP()
 
 
@@ -170,14 +171,29 @@ void CTimerAppDlg::OnBnClickedNewTimer()
 	CTimerDialog dlg;
 	INT_PTR result = dlg.DoModal();
 
-	if (result == IDOK)
-		MessageBox(TEXT("Saving timer..."));
-	else if (result == IDCANCEL)
-		MessageBox(TEXT("Discarding changes..."));
-	else
-		MessageBox(TEXT("Unknown value!"));
-}
+	CDesktopTimer *wnd = new CDesktopTimer();
+	wnd->CreateEx(
+		WS_EX_TOOLWINDOW | WS_EX_TOPMOST | WS_EX_LAYERED,
+		_T("STATIC"),
+		_T("09:59:12"),
+		WS_CHILD | WS_VISIBLE,
+		CRect(0, 0, 150, 100),
+		GetDesktopWindow(),
+		65535
+	);
 
+	wnd->SetWindowPos(&CWnd::wndTopMost, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
+	wnd->SetLayeredWindowAttributes(RGB(255, 255, 255), 255, LWA_COLORKEY | LWA_ALPHA);
+	//wnd->ShowWindow(SW_NORMAL);
+	//wnd->SetWindowPos(&wndTopMost, 0, 0, 100, 100, )
+
+	if (result == IDOK)
+	{
+		CTimerProps Timer = dlg.GetTimer();
+		m_Store.AddTimer(Timer);
+		m_TimerList.AddString(Timer.name);
+	}
+}
 
 void CAboutDlg::OnNMClickGithubLink(NMHDR *pNMHDR, LRESULT *pResult)
 {
@@ -187,4 +203,12 @@ void CAboutDlg::OnNMClickGithubLink(NMHDR *pNMHDR, LRESULT *pResult)
 	url.Replace(TEXT("</a>"), TEXT(""));
 	::ShellExecute(NULL, NULL, url, NULL, NULL, SW_SHOWNORMAL);
 	*pResult = 0;
+}
+
+
+void CTimerAppDlg::OnLbnDblclkTimerList()
+{
+	int TimerIndex = m_TimerList.GetCurSel();
+	CTimerProps *Timer = m_Store.GetTimer(TimerIndex);
+	OutputDebugString(Timer->name);
 }

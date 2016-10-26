@@ -4,7 +4,8 @@
 
 #pragma once
 #include "afxwin.h"
-
+#include "TimerStore.h"
+#include "DesktopTimer.h"
 
 // CTimerAppDlg dialog
 class CTimerAppDlg : public CDialog
@@ -25,6 +26,7 @@ public:
 // Implementation
 protected:
 	HICON m_hIcon;
+	CTimerStore m_Store;
 
 	// Generated message map functions
 	virtual BOOL OnInitDialog();
@@ -36,4 +38,5 @@ public:
 	afx_msg void OnBnClickedOk();
 	CListBox m_TimerList;
 	afx_msg void OnBnClickedNewTimer();
+	afx_msg void OnLbnDblclkTimerList();
 };
