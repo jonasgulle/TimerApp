@@ -161,17 +161,3 @@ void CTimerDialog::OnEnChangeTimerName()
 	GetDlgItemText(IDC_TIMER_NAME, TimerName);
 	GetDlgItem(IDOK)->EnableWindow(TimerName.IsEmpty() ? FALSE : TRUE);
 }
-
-
-BOOL CTimerDialog::PreTranslateMessage(MSG* pMsg)
-{
-	if (pMsg->message == WM_MOUSEMOVE && (pMsg->wParam & MK_LBUTTON))
-	{
-		ReleaseCapture();
-		SendMessage(WM_NCLBUTTONDOWN, HTCAPTION, 0);
-		SendMessage(WM_NCLBUTTONUP, HTCAPTION, 0);
-		return 1;
-	}
-
-	return CDialogEx::PreTranslateMessage(pMsg);
-}

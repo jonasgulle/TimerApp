@@ -20,14 +20,16 @@ public:
 private:
 	CTimerProps m_Timer;
 	time_t m_StartTime;
+	CString m_OldTimeStr;
 public:
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 	afx_msg void OnTimer(UINT_PTR nIDEvent);
 	afx_msg void OnDestroy();
+
 protected:
 	void DrawNewTime();
+
 public:
 	afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);
-	afx_msg LRESULT OnNcHitTest(CPoint point);
 };
 

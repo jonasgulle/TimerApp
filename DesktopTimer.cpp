@@ -27,7 +27,6 @@ BEGIN_MESSAGE_MAP(CDesktopTimer, CStatic)
 	ON_WM_TIMER()
 	ON_WM_DESTROY()
 	ON_WM_CTLCOLOR()
-	ON_WM_NCHITTEST()
 END_MESSAGE_MAP()
 
 
@@ -63,7 +62,7 @@ int CDesktopTimer::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	font->CreateFontIndirect(&m_Timer.font);
 	SetFont(font);
 
-	SetTimer(0, 500, NULL);
+	SetTimer(0, 100, NULL);
 	m_StartTime = time(0);
 
 	DrawNewTime();
@@ -108,6 +107,8 @@ void CDesktopTimer::DrawNewTime()
 
 	CString TimeStr;
 	TimeStr.Format(_T("%02d:%02d:%02d"), h, m, s);
+	if (m_OldTimeStr == TimeStr)
+		return;
 
 	CClientDC dc(this);
 	CFont *Font = GetFont();
@@ -124,6 +125,7 @@ void CDesktopTimer::DrawNewTime()
 	CSize sz = dc.GetTextExtent(TimeStr, TimeStr.GetLength());
 	SetWindowPos(0, 0, 0, sz.cx, sz.cy, SWP_NOMOVE | SWP_NOZORDER);
 	SetWindowText(TimeStr);
+	m_OldTimeStr = TimeStr;
 
 	Invalidate();
 }
@@ -136,10 +138,3 @@ HBRUSH CDesktopTimer::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
 	pDC->SetTextColor(m_Timer.color);
 	return hbr;
 }
-
-
-LRESULT CDesktopTimer::OnNcHitTest(CPoint point)
-{
-	return HTCAPTION;
-}
-

@@ -170,8 +170,8 @@ HCURSOR CTimerAppDlg::OnQueryDragIcon()
 
 void CTimerAppDlg::OnBnClickedOk()
 {
-	/*int answer = MessageBox(TEXT("Do you want to exit the application?"), TEXT("Exit?"), MB_YESNO | MB_ICONEXCLAMATION);
-	if (answer == IDYES)*/
+	int answer = MessageBox(TEXT("Do you want to exit the application?"), TEXT("Exit?"), MB_YESNO | MB_ICONEXCLAMATION);
+	if (answer == IDYES)
 		CDialog::OnOK();
 }
 
@@ -201,9 +201,7 @@ void CTimerAppDlg::OnBnClickedNewTimer()
 
 		wnd->SetWindowPos(&CWnd::wndTopMost, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
 		wnd->SetLayeredWindowAttributes(RGB(255, 255, 255), 255, LWA_COLORKEY);
-
 		m_TimerList.SetItemDataPtr(Index, wnd);
-
 		m_TimerWindows.AddTail(wnd);
 	}
 }
