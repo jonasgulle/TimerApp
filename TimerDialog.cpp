@@ -58,14 +58,15 @@ BOOL CTimerDialog::OnInitDialog()
 	GetDlgItem(IDOK)->EnableWindow(FALSE);
 
 	// The item data represents number of seconds the the time unit.
-	m_TimeUnit.SetItemData(0, 60 * 60);	// Hours
+	m_TimeUnit.SetItemData(0, 60 * 60);		// Hours
 	m_TimeUnit.SetItemData(1, 60);			// Minutes
 	m_TimeUnit.SetItemData(2, 1);			// Seconds
 
-	// Show the font dialog with 12 point "Times New Roman" as the default font.
+	CClientDC dc(this);
 	memset(&m_TimerFont, 0, sizeof(LOGFONT));
-	m_TimerFont.lfHeight = -16;
-	_tcscpy_s(m_TimerFont.lfFaceName, LF_FACESIZE, _T("Times New Roman"));
+	m_TimerFont.lfHeight = -MulDiv(24, dc.GetDeviceCaps(LOGPIXELSY), 72);
+	m_TimerFont.lfQuality = CLEARTYPE_QUALITY;
+	_tcscpy_s(m_TimerFont.lfFaceName, LF_FACESIZE, _T("Verdana"));
 
 	UpdateFont(&m_TimerFont);
 	UpdateColor(m_FontColor);
@@ -77,6 +78,8 @@ BOOL CTimerDialog::OnInitDialog()
 
 void CTimerDialog::OnBnClickedSelectFont()
 {
+	UpdateData();
+
 	CFontDialog dlg(&m_TimerFont);
 	if (dlg.DoModal() == IDOK)
 	{
@@ -157,4 +160,18 @@ void CTimerDialog::OnEnChangeTimerName()
 	CString TimerName;
 	GetDlgItemText(IDC_TIMER_NAME, TimerName);
 	GetDlgItem(IDOK)->EnableWindow(TimerName.IsEmpty() ? FALSE : TRUE);
+}
+
+
+BOOL CTimerDialog::PreTranslateMessage(MSG* pMsg)
+{
+	if (pMsg->message == WM_MOUSEMOVE && (pMsg->wParam & MK_LBUTTON))
+	{
+		ReleaseCapture();
+		SendMessage(WM_NCLBUTTONDOWN, HTCAPTION, 0);
+		SendMessage(WM_NCLBUTTONUP, HTCAPTION, 0);
+		return 1;
+	}
+
+	return CDialogEx::PreTranslateMessage(pMsg);
 }

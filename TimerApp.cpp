@@ -13,14 +13,14 @@
 
 // CTimerAppApp
 
-BEGIN_MESSAGE_MAP(CTimerAppApp, CWinApp)
+BEGIN_MESSAGE_MAP(CTimerApp, CWinApp)
 	ON_COMMAND(ID_HELP, &CWinApp::OnHelp)
 END_MESSAGE_MAP()
 
 
 // CTimerAppApp construction
 
-CTimerAppApp::CTimerAppApp()
+CTimerApp::CTimerApp()
 {
 	// support Restart Manager
 	m_dwRestartManagerSupportFlags = AFX_RESTART_MANAGER_SUPPORT_RESTART;
@@ -32,12 +32,12 @@ CTimerAppApp::CTimerAppApp()
 
 // The one and only CTimerAppApp object
 
-CTimerAppApp theApp;
+CTimerApp theApp;
 
 
 // CTimerAppApp initialization
 
-BOOL CTimerAppApp::InitInstance()
+BOOL CTimerApp::InitInstance()
 {
 	// InitCommonControlsEx() is required on Windows XP if an application
 	// manifest specifies use of ComCtl32.dll version 6 or later to enable

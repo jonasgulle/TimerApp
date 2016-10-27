@@ -15,10 +15,10 @@
 // See TimerApp.cpp for the implementation of this class
 //
 
-class CTimerAppApp : public CWinApp
+class CTimerApp : public CWinApp
 {
 public:
-	CTimerAppApp();
+	CTimerApp();
 
 // Overrides
 public:
@@ -29,4 +29,4 @@ public:
 	DECLARE_MESSAGE_MAP()
 };
 
-extern CTimerAppApp theApp;
+extern CTimerApp theApp;

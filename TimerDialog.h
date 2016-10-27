@@ -47,4 +47,5 @@ public:
 	virtual void OnOK();
 	CString m_TimerName;
 	afx_msg void OnEnChangeTimerName();
+	virtual BOOL PreTranslateMessage(MSG* pMsg);
 };

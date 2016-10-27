@@ -27,6 +27,7 @@ public:
 protected:
 	HICON m_hIcon;
 	CTimerStore m_Store;
+	CList<CDesktopTimer *> m_TimerWindows;
 
 	// Generated message map functions
 	virtual BOOL OnInitDialog();
@@ -39,4 +40,11 @@ public:
 	CListBox m_TimerList;
 	afx_msg void OnBnClickedNewTimer();
 	afx_msg void OnLbnDblclkTimerList();
+	afx_msg void OnDestroy();
+	afx_msg void OnBnClickedMoveRight();
+	afx_msg void OnSelchangeTimerList();
+	void EnableArrows(bool bEnable);
+	afx_msg void OnBnClickedMoveDown();
+	afx_msg void OnBnClickedMoveUp();
+	afx_msg void OnBnClickedMoveLeft();
 };

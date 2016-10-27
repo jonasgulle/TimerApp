@@ -12,6 +12,7 @@
 #define new DEBUG_NEW
 #endif
 
+#define OFFSET_MOVE 40
 
 // CAboutDlg dialog used for App About
 
@@ -72,6 +73,12 @@ BEGIN_MESSAGE_MAP(CTimerAppDlg, CDialog)
 	ON_BN_CLICKED(IDOK, &CTimerAppDlg::OnBnClickedOk)
 	ON_BN_CLICKED(IDC_NEW_TIMER, &CTimerAppDlg::OnBnClickedNewTimer)
 	ON_LBN_DBLCLK(IDC_TIMER_LIST, &CTimerAppDlg::OnLbnDblclkTimerList)
+	ON_WM_DESTROY()
+	ON_BN_CLICKED(IDC_MOVE_RIGHT, &CTimerAppDlg::OnBnClickedMoveRight)
+	ON_LBN_SELCHANGE(IDC_TIMER_LIST, &CTimerAppDlg::OnSelchangeTimerList)
+	ON_BN_CLICKED(IDC_MOVE_DOWN, &CTimerAppDlg::OnBnClickedMoveDown)
+	ON_BN_CLICKED(IDC_MOVE_UP, &CTimerAppDlg::OnBnClickedMoveUp)
+	ON_BN_CLICKED(IDC_MOVE_LEFT, &CTimerAppDlg::OnBnClickedMoveLeft)
 END_MESSAGE_MAP()
 
 
@@ -100,6 +107,8 @@ BOOL CTimerAppDlg::OnInitDialog()
 			pSysMenu->AppendMenu(MF_STRING, IDM_ABOUTBOX, strAboutMenu);
 		}
 	}
+
+	EnableArrows(FALSE);
 
 	// Set the icon for this dialog.  The framework does this automatically
 	//  when the application's main window is not a dialog
@@ -161,8 +170,8 @@ HCURSOR CTimerAppDlg::OnQueryDragIcon()
 
 void CTimerAppDlg::OnBnClickedOk()
 {
-	int answer = MessageBox(TEXT("Do you want to exit the application?"), TEXT("Exit?"), MB_YESNO | MB_ICONEXCLAMATION);
-	if (answer == IDYES)
+	/*int answer = MessageBox(TEXT("Do you want to exit the application?"), TEXT("Exit?"), MB_YESNO | MB_ICONEXCLAMATION);
+	if (answer == IDYES)*/
 		CDialog::OnOK();
 }
 
@@ -171,27 +180,31 @@ void CTimerAppDlg::OnBnClickedNewTimer()
 	CTimerDialog dlg;
 	INT_PTR result = dlg.DoModal();
 
-	CDesktopTimer *wnd = new CDesktopTimer();
-	wnd->CreateEx(
-		WS_EX_TOOLWINDOW | WS_EX_TOPMOST | WS_EX_LAYERED,
-		_T("STATIC"),
-		_T("09:59:12"),
-		WS_CHILD | WS_VISIBLE,
-		CRect(0, 0, 150, 100),
-		GetDesktopWindow(),
-		65535
-	);
-
-	wnd->SetWindowPos(&CWnd::wndTopMost, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
-	wnd->SetLayeredWindowAttributes(RGB(255, 255, 255), 255, LWA_COLORKEY | LWA_ALPHA);
-	//wnd->ShowWindow(SW_NORMAL);
-	//wnd->SetWindowPos(&wndTopMost, 0, 0, 100, 100, )
-
 	if (result == IDOK)
 	{
 		CTimerProps Timer = dlg.GetTimer();
 		m_Store.AddTimer(Timer);
-		m_TimerList.AddString(Timer.name);
+		int Index = m_TimerList.AddString(Timer.name);
+		m_TimerList.SetCurSel(Index);
+		EnableArrows(TRUE);
+
+		CDesktopTimer *wnd = new CDesktopTimer(Timer);
+		wnd->CreateEx(
+			WS_EX_TOOLWINDOW | WS_EX_TOPMOST | WS_EX_LAYERED,
+			_T("STATIC"),
+			_T(""),
+			WS_CHILD | WS_VISIBLE,
+			CRect(0, 0, 150, 100),
+			GetDesktopWindow(),
+			65535
+		);
+
+		wnd->SetWindowPos(&CWnd::wndTopMost, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
+		wnd->SetLayeredWindowAttributes(RGB(255, 255, 255), 255, LWA_COLORKEY);
+
+		m_TimerList.SetItemDataPtr(Index, wnd);
+
+		m_TimerWindows.AddTail(wnd);
 	}
 }
 
@@ -211,4 +224,100 @@ void CTimerAppDlg::OnLbnDblclkTimerList()
 	int TimerIndex = m_TimerList.GetCurSel();
 	CTimerProps *Timer = m_Store.GetTimer(TimerIndex);
 	OutputDebugString(Timer->name);
+}
+
+
+void CTimerAppDlg::OnDestroy()
+{
+	CDialog::OnDestroy();
+
+	// Tear down all timer windows
+	POSITION pos = m_TimerWindows.GetHeadPosition();
+	while (pos)
+	{
+		CDesktopTimer *wnd = m_TimerWindows.GetNext(pos);
+		wnd->DestroyWindow();
+		delete wnd;
+	}
+}
+
+
+void CTimerAppDlg::OnBnClickedMoveRight()
+{
+	int Index = m_TimerList.GetCurSel();
+	if (Index == LB_ERR)
+		return;
+
+	CWnd *wnd = static_cast<CWnd *>(m_TimerList.GetItemDataPtr(Index));
+	if (wnd)
+	{
+		CRect rect;
+		wnd->GetWindowRect(&rect);
+		rect.OffsetRect(OFFSET_MOVE, 0);
+		wnd->MoveWindow(&rect);
+	}
+}
+
+void CTimerAppDlg::OnBnClickedMoveDown()
+{
+	int Index = m_TimerList.GetCurSel();
+	if (Index == LB_ERR)
+		return;
+
+	CWnd *wnd = static_cast<CWnd *>(m_TimerList.GetItemDataPtr(Index));
+	if (wnd)
+	{
+		CRect rect;
+		wnd->GetWindowRect(&rect);
+		rect.OffsetRect(0, OFFSET_MOVE);
+		wnd->MoveWindow(&rect);
+	}
+}
+
+void CTimerAppDlg::OnBnClickedMoveUp()
+{
+	int Index = m_TimerList.GetCurSel();
+	if (Index == LB_ERR)
+		return;
+
+	CWnd *wnd = static_cast<CWnd *>(m_TimerList.GetItemDataPtr(Index));
+	if (wnd)
+	{
+		CRect rect;
+		wnd->GetWindowRect(&rect);
+		rect.OffsetRect(0, -OFFSET_MOVE);
+		wnd->MoveWindow(&rect);
+	}
+}
+
+
+void CTimerAppDlg::OnBnClickedMoveLeft()
+{
+	int Index = m_TimerList.GetCurSel();
+	if (Index == LB_ERR)
+		return;
+
+	CWnd *wnd = static_cast<CWnd *>(m_TimerList.GetItemDataPtr(Index));
+	if (wnd)
+	{
+		CRect rect;
+		wnd->GetWindowRect(&rect);
+		rect.OffsetRect(-OFFSET_MOVE, 0);
+		wnd->MoveWindow(&rect);
+	}
+}
+
+
+void CTimerAppDlg::OnSelchangeTimerList()
+{
+	int Index = m_TimerList.GetCurSel();
+	EnableArrows(Index != LB_ERR);
+}
+
+
+void CTimerAppDlg::EnableArrows(bool bEnable)
+{
+	UINT Arrows[] = { IDC_MOVE_RIGHT, IDC_MOVE_LEFT, IDC_MOVE_UP, IDC_MOVE_DOWN };
+	for (size_t i = 0; i < sizeof(Arrows) / sizeof(UINT); i++)
+		GetDlgItem(Arrows[i])->EnableWindow(bEnable);
 }
